@@ -1,0 +1,223 @@
+:root{
+    --base-clr: #8e40b2;
+    --line-clr: #6dc972;
+    --hover-clr: #5b7074;
+    --text-clr: #f1f0f0;
+    --acent-clr: #ffe644;
+    --secondary-text-clr: #c5c2c2;
+}
+*{
+    margin: 0;
+    padding: 0;
+}
+html{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    line-height: 1.5rem;
+}
+body{
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--base-clr);
+    color: var(--text-clr);
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+#sidebar{
+    box-sizing: border-box;
+    height: 100vh;
+    width: 250px;
+    padding: 5px 2em;
+    background-color: var(--base-clr);
+    border-right: 1px solid var(--line-clr);
+    position: sticky;
+    top: 0;
+    align-self: start;
+    transition: 300ms ease-in-out;
+}
+#sidebar.close{
+    padding: 5px;
+    width: 4.5em;
+    overflow: hidden;
+    text-wrap: nowrap;
+}
+
+#sidebar ul{
+    list-style: none;
+}
+/* this is where the first item in the sidebar is styled */
+#sidebar > ul > li:first-child{
+    display: flex;
+    justify-content:flex-end;
+    border-radius: .3em;
+    padding: .75em;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line-clr);
+    .logo{
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 2rem;
+        font-weight: 600;
+    }
+}
+#sidebar  ul  li.active a{
+    color: var(--acent-clr);
+    svg{
+        fill: var(--acent-clr);
+    }
+}
+#sidebar a, #sidebar .dropdown-btn, #sidebar .logo, #sidebar .toggle{
+    border-radius: .3em;
+    padding: .75em;
+    text-decoration: none;
+    color: var(--text-clr);
+    display: flex;
+    align-items: center;
+    gap: .75em;
+}
+.dropdown-btn, .toggle-btn{
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+}
+#sidebar svg{
+    flex-shrink: 0;
+}
+#sidebar a span, #sidebar .dropdown-btn span{
+    flex-grow: 1;
+}
+#sidebar a:hover, #sidebar .dropdown-btn:hover{
+    background-color: var(--hover-clr);
+}
+#sidebar .sub-menu{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: 300ms ease-in-out;
+    > div{
+        overflow: hidden;
+    }
+}
+#sidebar .sub-menu.show{
+    grid-template-rows: 1fr;
+}
+.dropdown-btn svg{
+    transition: 200ms ease;
+}
+.rotate svg:last-child{
+    rotate: -90deg;
+}
+#sidebar .sub-menu a{
+    padding-left: 3em;
+}
+#toggle-btn{
+    margin-left: auto;
+    svg{
+        transition: rotate 200ms ease;
+    }
+}
+#sidebar .toggle-btn:hover{
+    svg {fill: var(--acent-clr);
+    }
+}
+main{
+    padding: min(55px, 10%);
+}
+main h1{
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--secondary-text-clr);
+    text-shadow: 1px 1px 5px grey;
+}
+splash{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+}
+.splash{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15vh 25vw 25vh 25vw;
+    width: auto;
+    height: auto;
+    text-align: center;
+    font: 800 6rem 'comic sans ms', cursive;
+    text-shadow: #ffe644 0 0 1px, #ffe644 0 0 2px, #ffe644 0 0 3px;
+    color: var(--text-clr);
+    background-color: rgb(255, 0, 72);
+    border: var(--text-clr) 5px solid;
+    border-radius: 1em;
+    animation: wobble 25s ease 0s infinite normal forwards;
+    filter: drop-shadow(13px 15px 16px #000000);
+    transition: transform 1.7s ease, opacity 0.7s ease;
+
+}
+.slide-out {
+            animation: none !important;
+            transform: translateY(-200px) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+}
+
+@keyframes wobble {
+	0%,
+	100% {
+		transform: rotate(0deg);
+		transform-origin: 50% 50%;
+	}
+
+	10% {
+		transform: rotate(8deg);
+	}
+
+	20%,
+	40%,
+	60% {
+		transform: rotate(-10deg);
+	}
+
+	30%,
+	50%,
+	70% {
+		transform: rotate(10deg);
+	}
+
+	80% {
+		transform: rotate(-8deg);
+	}
+
+	90% {
+		transform: rotate(8deg);
+	}
+}
+.lang-select{
+    display: flex;
+    list-style: none;
+    position: fixed;
+    top: 0.2em;
+    left: auto;
+    right: 5%;
+    width: auto;
+    z-index: 1000;
+    background: none;
+    gap: 0.3em;
+}
+.lang-select li button{
+    padding: 0.06em 0.1em 0.01em 0.1em;;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 8px;
+    align-items: center;
+}
+.lang-select li button.active{
+    background-color: var(--acent-clr);
+}
