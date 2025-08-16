@@ -1,18 +1,20 @@
 # theme
-    professionalism
-        icon colours
-    ? light/darkmode
+    - professionalism
+        - icon colours
+    - ? light/darkmode
+    - splash screen => 404
+    - new splash with lang/theme
 # content
     -index
         <p> for each intrest (backstory)
-    -tracker
-    -multimix
-    !-nanoosc
-    -homework?
-    ?lil guy
-    ?dog
+    - tracker
+    - multimix
+    - !- nanoosc
+    - homework?
+    - ?lil guy
+    - ?dog
 # features
-CSP:
+- CSP:
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
   script-src 'self';
@@ -21,8 +23,8 @@ CSP:
   object-src 'none';
 ">
 
-    layout
-        contact:
+    - layout
+        - contact:
         logo & span with border and onhover
 
         content:
@@ -32,13 +34,13 @@ CSP:
 
                     write up
         
-    code display
+    - code display
 
-    git repos
-        this
-        projects
+    - git repos
+        - this = Done!
+        - projects
 
 # bugs
-    x   sidebar persistence
-    x   dropdown persistence
-    x   splashscreen cooldown?
+    - x   sidebar persistence
+    - x   dropdown persistence
+    - x   splashscreen cooldown?
