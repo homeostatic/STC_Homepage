@@ -12,6 +12,15 @@
     ?lil guy
     ?dog
 # features
+CSP:
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data:;
+  object-src 'none';
+">
+
     layout
         contact:
         logo & span with border and onhover
