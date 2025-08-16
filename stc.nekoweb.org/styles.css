@@ -1,10 +1,12 @@
 :root{
-    --base-clr: #8e40b2;
-    --line-clr: #6dc972;
-    --hover-clr: #5b7074;
-    --text-clr: #f1f0f0;
-    --acent-clr: #ffe644;
-    --secondary-text-clr: #c5c2c2;
+    --base-clr: #ffffff16;
+    --line-clr: #232323;
+    --hover-clr: #8dc99b;
+    --text-clr: #000000;
+    --acent-clr: #face1f;
+    --secondary-text-clr: #004f19;
+    --icon-primary: #004f19;
+    --icon-secondary: #768da5;
 }
 *{
     margin: 0;
@@ -58,11 +60,20 @@ body{
         font-weight: 600;
     }
 }
+#sidebar ul svg .st0{
+    fill: var(--icon-primary);
+}
+#sidebar ul svg .st1{
+    fill: var(--icon-secondary);
+}
+
 #sidebar  ul  li.active a{
-    color: var(--acent-clr);
-    svg{
+    /* color: var(--acent-clr); */
+    svg .st0{
         fill: var(--acent-clr);
+        
     }
+    span{text-shadow: 1px 1px 8px var(--acent-clr);}
 }
 #sidebar a, #sidebar .dropdown-btn, #sidebar .logo, #sidebar .toggle{
     border-radius: .3em;
@@ -81,14 +92,21 @@ body{
     font: inherit;
     cursor: pointer;
 }
-#sidebar svg{
+#sidebar svg:not(.dropdown-arrow):not(.toggle-arrow){
+    width: 3em;
+    height: 3em;
     flex-shrink: 0;
+    transition: transform 200ms ease;
 }
 #sidebar a span, #sidebar .dropdown-btn span{
     flex-grow: 1;
+    
 }
 #sidebar a:hover, #sidebar .dropdown-btn:hover{
     background-color: var(--hover-clr);
+    svg {
+        transform: scale(1.1);
+    }
 }
 #sidebar .sub-menu{
     display: grid;
@@ -101,10 +119,11 @@ body{
 #sidebar .sub-menu.show{
     grid-template-rows: 1fr;
 }
-.dropdown-btn svg{
+.dropdown-arrow{
+    flex-shrink: 0;
     transition: 200ms ease;
 }
-.rotate svg:last-child{
+.rotate .dropdown-arrow, .rotate .toggle-arrow{
     rotate: -90deg;
 }
 #sidebar .sub-menu a{
@@ -120,16 +139,73 @@ body{
     svg {fill: var(--acent-clr);
     }
 }
-main{
-    padding: min(55px, 10%);
+.dropdown-arrow:hover{
+    fill: var(--acent-clr);
+}
+main {
+    padding: min(55px, 20%);
+}
+main a {
+    width: 60%;
+    height: 4em;
+    padding: 0.5em;
+    margin-left: 2em;
+    border: 2px solid var(--line-clr);
+    border-radius: 20px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 0.5em;
+    background-color: var(--hover-clr);
+}
+main a svg {
+    width: 3em;
+    height: 3em;
+    transition: transform 200ms ease;
+}
+main a:hover {
+    transform: scale(1.02);
+}
+main a:hover svg {
+    transform: scale(1.1);
+}
+main ul {
+    list-style: none;
+    padding-left: 3em;
+    padding: 1em;
+}
+main li {
+    margin-bottom: 1em;
+    color: var(--secondary-text-clr);
+    font-weight: 540;
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+}
+main li svg {
+    width: 2.5em;
+    height: 2.5em;
+    flex-shrink: 0.25;
 }
 main h1{
-    font-size: 2.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    gap: 1.5em;
+    display: flex;
     color: var(--secondary-text-clr);
-    text-shadow: 1px 1px 5px grey;
 }
+main h2{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+main p{
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
 splash{
     position: absolute;
     top: 0;
@@ -211,7 +287,8 @@ splash{
     gap: 0.3em;
 }
 .lang-select li button{
-    padding: 0.06em 0.1em 0.01em 0.1em;;
+    padding: 0.06em 0.1em 0.01em 0.04em;
+    width: 2em;
     border: none;
     background: none;
     cursor: pointer;

@@ -3,6 +3,8 @@
         icon colours
     ? light/darkmode
 # content
+    -index
+        <p> for each intrest (backstory)
     -tracker
     -multimix
     !-nanoosc
