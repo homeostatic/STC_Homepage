@@ -1,5 +1,5 @@
 :root{
-    --base-clr: #ffffff16;
+    --base-clr: #f4f7ff3c;
     --line-clr: #232323;
     --hover-clr: #8dc99b;
     --text-clr: #000000;
@@ -27,8 +27,8 @@ body{
 #sidebar{
     box-sizing: border-box;
     height: 100vh;
-    width: 250px;
-    padding: 5px 2em;
+    width: auto;
+    padding: 5px 1em;
     background-color: var(--base-clr);
     border-right: 1px solid var(--line-clr);
     position: sticky;
@@ -51,8 +51,8 @@ body{
     display: flex;
     justify-content:flex-end;
     border-radius: .3em;
-    padding: .75em;
-    margin-bottom: 1.5rem;
+    padding: .75em .1em;
+    margin-bottom: 1.25rem;
     border-bottom: 1px solid var(--line-clr);
     .logo{
         font-family: 'Courier New', Courier, monospace;
@@ -176,34 +176,60 @@ main ul {
 }
 main li {
     margin-bottom: 1em;
-    color: var(--secondary-text-clr);
     font-weight: 540;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.7em;
 }
 main li svg {
     width: 2.5em;
     height: 2.5em;
-    flex-shrink: 0.25;
+    flex-shrink: 0;
 }
-main h1{
-    font-size: 4rem;
-    font-weight: 800;
+.poi {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    margin-top: 0.5em;
+}
+main h0{
+    font-size: 5rem;
+    font-weight: 600;
     line-height: 1.2;
-    margin-bottom: 2rem;
     gap: 1.5em;
     display: flex;
+    font-family: 'Courier New', Courier, monospace;
     color: var(--secondary-text-clr);
+}
+main h1{
+    font-size: 3rem;
+    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    gap: 1.5em;
+    display: flex;
+    /* font-family: 'Courier New', Courier, monospace; */
+    color: var(--text-clr);
 }
 main h2{
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 570;
+    padding: 0.1em 0.5em;
     margin-bottom: 1.5rem;
+    border-radius: .3em;
+    border-bottom: 1px solid var(--line-clr);
+}
+main h3{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--secondary-text-clr);
 }
 main p{
+    color: var(--text-clr);
     font-size: 1rem;
     margin-bottom: 1rem;
+    text-align: justify;
 }
 
 splash{
