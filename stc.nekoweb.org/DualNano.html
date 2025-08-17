@@ -4,7 +4,14 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Sam's Archive Home</title>
+		    <!-- <meta http-equiv="Content-Security-Policy" content="
+            default-src 'self';
+            script-src 'self' 'unsafe-inline';
+            style-src 'self' 'unsafe-inline';
+            img-src 'self' data:;
+            object-src 'none';
+            "> -->
+        <title>Dual Nano Oscilator - Sam's Stuff</title>
 		<link rel="stylesheet" href="styles.css" />
 		<script type="text/javascript" src="app.js" defer> </script>
 	</head>
@@ -12,7 +19,63 @@
         <!-- this gets injected with sidebar.html -->
         <div id="sidebar-container"></div>
         <main>
-            test
+            <h0 lang="en">
+                Dual Nano Oscillator
+            </h0>
+            <h0 lang="de">
+                Dual Nano Oszillator
+            </h0>
+            <div class ="desc">
+            <p lang="en">
+                A dual mode digital eurorack Oscillator based on the excellent ardunio nano projects of <a class="inline" href="https://www.youtube.com/@HAGIWO">Hagiwo</a>.
+            </p>
+            <p lang="de">
+                Ein digitaler eurorack Oszillator... 
+            </div>
+            <div class="two-col">
+                <div >
+                    <ul class="features">
+                        <li>
+                            <span lang="en">Dual mode: FM & wavetable synthesis </span>
+                            <span lang="de">Dual-Modus: FM & Wavetable Synthese</span>
+                        </li>
+                        <li>
+                            <span lang="en">Crunchy 2-Pin-PWM output using Mozzi library</span>
+                            <span lang="de">Rauer 2-Pin-PWM Audioausgang gebaut mit Mozzi Bibliothek</span>
+                        </li>
+                        <li>
+                            <span lang="en">Physical- and Voltage control over all parameters</span>
+                            <span lang="de">Physische- und Spannungssteuerung aller Parameter</span>
+                        </li>
+                    </ul>
+                </div>
+                <div >
+                    <ul class="learnings">
+                        <li>
+                            <span lang="en">Optimising code for high performance with limited memory of ardunio</span>
+                            <span lang="de">...</span>
+                        </li>
+                        <li>
+                            <span lang="en">Fixed point numbers</span>
+                            <span lang="de">...</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="gallery"  aria-label="Image gallery">
+                <figure>
+                    <figcaption>Breadboard prototype</figcaption>
+                    <img src="resources/Nano_Breadboard_H.jpg" alt="Dual-Nano-Osc Breadboard"/>
+                </figure>
+                <figure>
+                    <figcaption>Schematic</figcaption>
+                    <img src="resources/Print Schematic - Dual_Nano_Osc.png" alt="Dual-Nano-Osc Schematic"/>
+                </figure>
+                <figure>
+                    <figcaption>Wavetable</figcaption>
+                    <img src="resources/wavetable.gif" alt="Dual-Nano-Osc wavetable sweep"/>
+                </figure>
+            </div>
         </main>
         <!-- this gets injected with lang.html -->
         <div id="lang-container"></div>

@@ -4,12 +4,18 @@ let sidebar;
 // will be set after buttons are injected
 let enButton; 
 let deButton;
+let sideVisible = true; // default state of sidebar
 
 
 function toggleSidebar() {
+
     sidebar = document.getElementById("sidebar");
     sidebar.classList.toggle("close");
     toggleButton.classList.toggle("rotate");
+
+    // persistence between pages
+    sideVisible = sidebar.classList.contains("close") ? false : true;
+    localStorage.setItem("sideBarOpen", sideVisible ? "yes" : "no");
 
     Array.from(sidebar.getElementsByClassName("show")).forEach((ul) => {
         ul.classList.remove("show");
@@ -18,13 +24,13 @@ function toggleSidebar() {
 }        
 
 function toggleSubMenu(button) {
+    if(sidebar.classList.contains("close")) {
+        toggleSidebar();
+    }
     button.nextElementSibling.classList.toggle("show");
     button.classList.toggle("rotate");
 
-    if(sidebar.classList.contains("close")) {
-        sidebar.classList.toggle("close");
-        toggleButton.classList.toggle("rotate");
-    }
+
 }
 
 // language toggle
@@ -73,6 +79,13 @@ fetch('sidebar.html')
         document.getElementById("sidebar-container").innerHTML = sidebarhtml;
         toggleButton= document.getElementById("toggle-btn");
         highlightActivePage();
+        // if state is saved, use it.
+        sideVisible = localStorage.getItem("sideBarOpen") == "yes" ? true : false;
+        if (!sideVisible) {
+            toggleSidebar();
+        }
+   
+
         // initialise language select
         fetch('lang.html')
             .then(res => res.text())

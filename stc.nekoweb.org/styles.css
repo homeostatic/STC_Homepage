@@ -1,5 +1,5 @@
 :root{
-    --base-clr: #f4f7ff3c;
+    --base-clr: #e9edfa5f;
     --line-clr: #232323;
     --hover-clr: #8dc99b;
     --text-clr: #000000;
@@ -144,9 +144,10 @@ body{
 }
 main {
     padding: min(55px, 20%);
+    transition: 300ms ease;
 }
-main a {
-    width: 60%;
+main a:not(.inline){ 
+    width: auto;
     height: 4em;
     padding: 0.5em;
     margin-left: 2em;
@@ -156,15 +157,17 @@ main a {
     justify-content: left;
     align-items: center;
     gap: 0.5em;
-    background-color: var(--hover-clr);
+    background-color: var(--base-clr);
 }
 main a svg {
     width: 3em;
     height: 3em;
+    flex-shrink: 0;
     transition: transform 200ms ease;
 }
 main a:hover {
     transform: scale(1.02);
+    box-shadow: 0 0 10px var(--hover-clr);
 }
 main a:hover svg {
     transform: scale(1.1);
@@ -193,9 +196,11 @@ main li svg {
     margin-top: 0.5em;
 }
 main h0{
+    width: 100%;
+    margin: auto;
     font-size: 5rem;
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1;
     gap: 1.5em;
     display: flex;
     font-family: 'Courier New', Courier, monospace;
@@ -203,7 +208,7 @@ main h0{
 }
 main h1{
     font-size: 3rem;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.1;
     margin-bottom: 1rem;
     gap: 1.5em;
@@ -213,7 +218,7 @@ main h1{
 }
 main h2{
     font-size: 1.5rem;
-    font-weight: 570;
+    font-weight: 500;
     padding: 0.1em 0.5em;
     margin-bottom: 1.5rem;
     border-radius: .3em;
@@ -228,8 +233,91 @@ main h3{
 main p{
     color: var(--text-clr);
     font-size: 1rem;
+    margin-top: 0.5rem;
     margin-bottom: 1rem;
     text-align: justify;
+}
+/* content page formatting */
+.two-col{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5em;
+    justify-items: center;
+}
+.two-col div{
+    margin-top: 1em;
+    width: 100%;
+    height: auto;
+    border-radius: 0.5em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid var(--line-clr);
+    border-right: 1px solid var(--line-clr);
+    background-color: var(--base-clr);
+}
+.two-col div ul{
+    padding: 0em;
+    margin: 0;
+}
+/* bullet points */
+.learnings li::before , .features li::before{
+  content: "";
+  display: inline-block;
+  width: 1.5em; 
+  height: 1.5em;
+  margin-right: 0.1em;
+  vertical-align: top;
+  background-image: url('icons/chevron-left-dot-svgrepo-com.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: rotate(180deg);
+  flex-shrink: 0;
+}
+.learnings li, .features li{
+    display: flex;
+    align-items: top;
+    justify-items: center;
+    margin: 0em;
+    gap: 0.1em;
+    font-size: 1rem;
+    color: var(--text-clr);
+    padding: 0.5em 0em;
+}
+/* Image gallery */
+.gallery{
+    padding: 0em 0em;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    justify-content: center;
+    /* border: 1px solid var(--line-clr); */
+}
+.gallery figure{
+    width: auto;
+    height: auto;
+    margin: 0.5em;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--base-clr);
+    transition: 300ms ease;
+}
+.gallery figure:hover{
+    box-shadow: 0 0 15px var(--hover-clr);
+    transform: scale(1.1);
+}
+.gallery figure figcaption{
+    padding: 0.5em;
+    text-align: center;
+    color: var(--text-clr);
+    font-weight: 500;
+    font-size: 0.8rem;
+    margin-top: 0.5em;
+}
+.gallery img{
+    width: clamp(10em, 20vw, 25em);
+    height: auto;
+    border-radius: 0.5em;
+    object-fit: cover;
 }
 
 splash{

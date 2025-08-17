@@ -16,7 +16,7 @@
 - CSP:
             <meta http-equiv="Content-Security-Policy" content="
             default-src 'self';
-            script-src 'self';
+            script-src 'self' unsafe-inline;
             style-src 'self' unsafe-inline';
             img-src 'self' data:;
             object-src 'none';
@@ -30,6 +30,7 @@
             key features | what i learned
 
             gallery
+                - add lightbox
 
             write up
         
@@ -38,6 +39,6 @@
 - git repos ( projects)
 
 # bugs
-- x   sidebar persistence
+- !   sidebar persistence //Done!
 - x   dropdown persistence
 - x   splashscreen cooldown?
