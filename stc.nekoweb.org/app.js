@@ -21,7 +21,18 @@ function toggleSidebar() {
         ul.classList.remove("show");
         ul.previousElementSibling.classList.remove("rotate");
     })
-}        
+}
+
+function closeSidebar() {
+    if (!sidebar.classList.contains("close")) {
+        toggleSidebar();
+    }
+}
+function openSidebar() {
+    if (sidebar.classList.contains("close")) {
+        toggleSidebar();
+    }
+}
 
 function toggleSubMenu(button) {
     if(sidebar.classList.contains("close")) {
@@ -29,8 +40,13 @@ function toggleSubMenu(button) {
     }
     button.nextElementSibling.classList.toggle("show");
     button.classList.toggle("rotate");
-
-
+    // persistence between pages
+    const subMenu = button.nextElementSibling;
+    if (subMenu.classList.contains("show")) {
+        localStorage.setItem(button.id, "yes");
+    }else {
+        localStorage.setItem(button.id, "no");
+    }
 }
 
 // language toggle
@@ -66,10 +82,39 @@ function updateLanguage(lang) {
     }
 }
 
+// modal handling
+function openModal(event) {
+    const modal = document.getElementById("modal");
+    const modalContent = document.getElementById('modal-content');
+    const modalImg = event.target.cloneNode(true);
+    modalContent.appendChild(modalImg);
+    modal.classList.add("show");
+}
+function closeModal() {
+    const modal = document.getElementById("modal");
+    modal.classList.remove("show");
+    const modalContent = document.getElementById('modal-content');
+    modalContent.removeChild(modalContent.lastElementChild); // Clear the modal content
+}
+// modal event listeners
+document.querySelectorAll('img').forEach(pic => {
+    pic.addEventListener('click', openModal);
+    });
+
 
 //animate splash screen
 function slideOut(element) {
     element.classList.add('slide-out');
+}
+
+function highlightActivePage() {
+    const links = document.querySelectorAll('#sidebar a');
+    links.forEach(link => {
+    if (link.href === window.location.href) {
+        link.parentElement.classList.add('active');
+        
+    }
+    });
 }
 
 // Initialize sidebar
@@ -78,13 +123,24 @@ fetch('sidebar.html')
         .then(sidebarhtml => {
         document.getElementById("sidebar-container").innerHTML = sidebarhtml;
         toggleButton= document.getElementById("toggle-btn");
+        sidebar = document.getElementById("sidebar");
         highlightActivePage();
+
         // if state is saved, use it.
         sideVisible = localStorage.getItem("sideBarOpen") == "yes" ? true : false;
         if (!sideVisible) {
-            toggleSidebar();
+            closeSidebar();
+        }else {
+            //openSidebar(); // this is not needed, as the sidebar is open by default
+            // load persistent submenu states, only relavant if sidebar is open
+            const subMenus = document.querySelectorAll('.dropdown-btn');
+            subMenus.forEach((button) => {localStorage.getItem(button.id) === "yes" ? toggleSubMenu(button):null ;});
         }
-   
+        const smallScreen = window.matchMedia("(max-width: 800px)");
+        if (smallScreen.matches) {
+            // if on small screen, close sidebar on load
+            closeSidebar();
+        }
 
         // initialise language select
         fetch('lang.html')
@@ -100,15 +156,8 @@ fetch('sidebar.html')
             });
         });
 
-    function highlightActivePage() {
-        const links = document.querySelectorAll('#sidebar a');
-        links.forEach(link => {
-        if (link.href === window.location.href) {
-            link.parentElement.classList.add('active');
-            
-        }
-        });
-    }
+
+
 
 
 

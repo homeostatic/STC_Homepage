@@ -30,15 +30,15 @@
             key features | what i learned
 
             gallery
-                - add lightbox
+                - add transiton
 
             write up
         
-- code display
+- code display //done
 
 - git repos ( projects)
 
 # bugs
 - !   sidebar persistence //Done!
-- x   dropdown persistence
-- x   splashscreen cooldown?
+- x   dropdown persistence //Done
+- x   splashscreen cooldown? //removed

@@ -4,36 +4,36 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		    <!-- <meta http-equiv="Content-Security-Policy" content="
-            default-src 'self';
-            script-src 'self' 'unsafe-inline';
-            style-src 'self' 'unsafe-inline';
-            img-src 'self' data:;
-            object-src 'none';
-            "> -->
         <title>Dual Nano Oscilator - Sam's Stuff</title>
 		<link rel="stylesheet" href="styles.css" />
+        <link rel="stylesheet" href="prettify.css"/>
 		<script type="text/javascript" src="app.js" defer> </script>
+        <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 	</head>
     <body>
         <!-- this gets injected with sidebar.html -->
         <div id="sidebar-container"></div>
         <main>
-            <h0 lang="en">
-                Dual Nano Oscillator
-            </h0>
-            <h0 lang="de">
-                Dual Nano Oszillator
-            </h0>
+            <div>
+                <h0 lang="en">
+                    Dual Nano Oscillator
+                </h0>
+                <h0 lang="de">
+                    Dual Nano Oszillator
+                </h0>
+            </div>
             <div class ="desc">
-            <p lang="en">
-                A dual mode digital eurorack Oscillator based on the excellent ardunio nano projects of <a class="inline" href="https://www.youtube.com/@HAGIWO">Hagiwo</a>.
-            </p>
-            <p lang="de">
-                Ein digitaler eurorack Oszillator... 
+                <p lang="en">
+                    A dual mode digital eurorack Oscillator based on the excellent ardunio nano projects of <a class="inline" href="https://www.youtube.com/@HAGIWO">Hagiwo</a>.
+                </p>
+                <p lang="de">
+                    Ein dual‑funktionaler, digitaler Eurorack‑Oszillator, basierend auf den exzellenten Arduino‑Nano‑Projekten von Hagiwo.
+                </p>
             </div>
             <div class="two-col">
-                <div >
+                <div>
+                    <h2 lang="en">Features</h2>
+                    <h2 lang="de">Funktionen</h2>
                     <ul class="features">
                         <li>
                             <span lang="en">Dual mode: FM & wavetable synthesis </span>
@@ -50,33 +50,256 @@
                     </ul>
                 </div>
                 <div >
+                    <h2 lang="en">What it taught me</h2>
+                    <h2 lang="de">Was ich dabei gelernt habe</h2>
                     <ul class="learnings">
                         <li>
-                            <span lang="en">Optimising code for high performance with limited memory of ardunio</span>
-                            <span lang="de">...</span>
+                            <span lang="en">Optimising code for high performance with the limited memory of the Arduino</span>
+                            <span lang="de">Optimierung für performanten Code mit den begrenzten Ressourcen des Arduino.</span>
                         </li>
                         <li>
-                            <span lang="en">Fixed point numbers</span>
-                            <span lang="de">...</span>
+                            <span lang="en">Static Wavetable generation in python</span>
+                            <span lang="de">Statishe Wavetable-Synthese mit Python</span>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="gallery"  aria-label="Image gallery">
-                <figure>
+                <figure class="fig">
                     <figcaption>Breadboard prototype</figcaption>
                     <img src="resources/Nano_Breadboard_H.jpg" alt="Dual-Nano-Osc Breadboard"/>
                 </figure>
-                <figure>
+                <figure class="fig">
                     <figcaption>Schematic</figcaption>
                     <img src="resources/Print Schematic - Dual_Nano_Osc.png" alt="Dual-Nano-Osc Schematic"/>
                 </figure>
-                <figure>
+                <figure class="fig">
                     <figcaption>Wavetable</figcaption>
                     <img src="resources/wavetable.gif" alt="Dual-Nano-Osc wavetable sweep"/>
                 </figure>
             </div>
+            <div>
+                <h2 lang="en">Source Code</Source></h2>
+                <h2 lang="de">Quellcode</h2>
+            </div>
+            <div class="code-showcase">
+                <pre class="prettyprint lang-cpp" ><code>
+/*
+Dual mode eurorack oscillator inspired by Hagiwo's nano oscillator
+    # mode 1 : wavetable morphing oscillator
+    % smooth morphing from noise-sine-tri-saw-square
+    knob 1 & voct in  = pitch
+    knob 2 & CV_IN1   = wavetable positon
+    knob 3 & CV_IN2   = tbd
+
+    # mode 2 : 2 Operator FM
+    % the Donker
+    knob 1 & voct in  = pitch
+    knob 2 & CV_IN1   = FM ratio
+    knob 3 & CV_IN2   = FM depth
+built on the excellent mozzi audio library    
+Mozzi is licensed under the GNU Lesser General Public Licence (LGPL) Version 2.1 or later.
+written by Sam of Homeostatic music - 2025
+*/
+
+///////////////////////////////
+#include &lt;MozziConfigValues.h&gt;
+#define MOZZI_AUDIO_MODE MOZZI_OUTPUT_2PIN_PWM //up to 14 bit output
+#define MOZZI_AUDIO_RATE 32768
+#define MOZZI_CONTROL_RATE 512  // Hz, powers of 2 are most reliable  //maybe try and increase this to allow for FMing
+
+#include &lt;Mozzi.h&gt;
+#include &lt;Oscil.h&gt;
+#include &lt;FixMath.h&gt;
+
+#define OSCIL_DITHER_PHASE
+
+// table for FM Oscils to play (2KB)
+#include &lt;tables/cos2048_int8.h&gt;  
+
+//custom data with 16 wavetables (16KB)
+#include &lt;tables/WaveSTC1024_int8.h&gt;
+//list for iterating over names
+const int8_t* WAVENAMES[16] = {
+WAVEDATA0, WAVEDATA1, WAVEDATA2, WAVEDATA3, WAVEDATA4, WAVEDATA5, WAVEDATA6, WAVEDATA7, WAVEDATA8, WAVEDATA9, WAVEDATA10, WAVEDATA11, WAVEDATA12, WAVEDATA13, WAVEDATA14, WAVEDATA15
+};
+
+// v/oct scaling factor range 1 - 32 (4KB)  {could probably be converted to UFix&lt;5,11&gt; with minimal loss of precision if 2KB needs saving}
+//2**voct ist precalculated to avoid using pow()
+#include &lt;tables/voctpow1024_float.h&gt;
+const static float voctpow[1024] PROGMEM = VOCTPOW_DATA;
+
+// scaling factor for converting voctpow values to fractional values between 0 and 1
+const static float INVFACT = 1/31;
+
+// response curve for FM ratio with flat-zones around even ratios, stored as 8 bit fixed point (1KB)
+#include &lt;tables/ratiotable1024_UFix3_5.h&gt;
+const static UFix&lt;3,5&gt; ratiotable[1024] PROGMEM = RATIOTABLE_DATA;
+
+////////////////////////////////////////////////////////////////////////////////
+//IO - pin numbers
+const byte KNOB1 = A0;  
+const byte KNOB2 = A1;  
+const byte KNOB3 = A2;  
+
+const int SWITCH_UP = 12;
+const int SWITCH_DOWN = 11;
+
+const byte VOCT_IN = A4;
+const byte CV_IN1 = A6;  
+const byte CV_IN2 = A7;  
+
+////////////////////////////////////////////////////////////////////////////////
+/*
+Output over pins 9 & 10 (2 pin PWM defaults)
+D10----[ 499k ]---|
+                |
+D9----[ 3.9k ]---o---[3.9k]---o--------&lt;OUT
+                |            L--|10n|-GND
+                L---|47n|-GND
+low pass definitely takes off some high end, but the impoved clarity is nice
+
+the ouput is buffered by a tl072 buffer before being sent out of the module
+inputs have clamping diodes to block voltages outside of ~0-5V
+*/
+////////////////////////////////////////////////////////////////////////////////
+//oscilators mode 1,
+Oscil &lt;1024, MOZZI_AUDIO_RATE&gt; waveA(WAVEDATA0);
+Oscil &lt;1024, MOZZI_AUDIO_RATE&gt; waveB(WAVEDATA1);
+
+//oscilators mode 2,
+Oscil&lt;COS2048_NUM_CELLS, MOZZI_AUDIO_RATE&gt; aCarrier(COS2048_DATA);
+Oscil&lt;COS2048_NUM_CELLS, MOZZI_AUDIO_RATE&gt; aModulator(COS2048_DATA);
+
+//////////////////////////////////////////////////////////////////////////////////////
+// variables
+
+// toggle
+volatile int mode;
+
+// Mode 1 - Wavetable
+UFix&lt;0,8&gt; gainA, gainB;
+int voct, freq_knob;
+UFix&lt;16,16&gt; freq; 
+int wave_knob, wave_cv, wave_sum;
+UFix&lt;4,6&gt; wave_pos; //for interpreting the 10bit adc reads as values from [0, 15.99]
+
+// Mode 2 - FM
+UFix&lt;0, 16&gt; mod_index;
+UFix&lt;8, 16&gt; deviation;  // 8 so that we do not exceed 32bits in updateAudio
+UFix&lt;4, 7&gt; mod_to_carrier_ratio;  // each 10 bit read (knob & CV_IN) will be interpreted as UFix&lt;3,7&gt;, these will be added to make a single UFix&lt;4,7&gt; (range 0 - 15.99)
+UFix&lt;0,2&gt; offset = 0.25; //minimum ratio
+UFix&lt;3,7&gt; ratio, cv_ratio;  //values from [0, 7.99]
+UFix&lt;0,10&gt; depth, cv_depth, knob_depth; //10 bit numbers from [0,1[
+UFix&lt;16, 16&gt; carrier_freq, mod_freq;  
+
+//////////////////////////////////////////////////////////////////////////////////////
+// function for setting wavetable position and crossfade gain in mode 1
+void setWave(){
+    //set waves
+    int wave_int = wave_pos.asInt();
+    waveA.setTable(WAVENAMES[constrain((wave_int-1),0,15)]);
+    waveB.setTable(WAVENAMES[wave_int]);
+    //set gains   -   linear crossfade between waves
+    gainB = wave_pos.asFloat()-wave_int; //fractional part of wave_pos
+    gainA = 1-gainB.asFloat();
+}
+
+void setFreqs(UFix&lt;16,16&gt; freq) {
+if (mode ==  1){
+    waveA.setFreq(freq);
+    waveB.setFreq(freq);
+}
+if (mode == 2){
+    mod_freq = UFix&lt;14,16&gt;(freq) * mod_to_carrier_ratio;
+    // this deviation factor is used within the AudioOutput calculation
+    deviation = ((UFix&lt;16,0&gt;(mod_freq)) * depth).sR&lt;8&gt;();  // the sR here cheaply divides the deviation by 256.
+    aCarrier.setFreq(freq);
+    aModulator.setFreq(mod_freq);
+}  
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+void setup() {
+    // pinMode(SWITCH_DOWN, INPUT_PULLUP); //currently unused
+    pinMode(12, INPUT_PULLUP);
+    pinMode(LED_BUILTIN, OUTPUT);
+    startMozzi();
+    // Serial.begin(9600);
+}
+
+void updateControl(){ 
+    //determine mode
+    mode = digitalRead(SWITCH_UP) +1;
+    if (mode == 1){//Wavetable
+        digitalWrite(LED_BUILTIN, HIGH); // LED indicator
+        //read and set wavetable position
+        wave_knob = mozziAnalogRead(KNOB2);
+        wave_cv = mozziAnalogRead(CV_IN1);
+        wave_sum = constrain(wave_knob+wave_cv, 0, 1023);
+        wave_pos = UFix&lt;4,6&gt;::fromRaw(wave_sum); //
+        setWave();
+    }
+    if (mode==2){//FM
+        digitalWrite(LED_BUILTIN, LOW); // LED indicator
+        //set ratio
+        //knob
+        ratio = UFix&lt;3,5&gt;::fromRaw(pgm_read_byte(&(ratiotable[mozziAnalogRead(KNOB2)])));
+        //CV in
+        cv_ratio = UFix&lt;3,7&gt;::fromRaw((mozziAnalogRead(CV_IN1)));
+        mod_to_carrier_ratio = ratio + cv_ratio + offset; 
+    }
+    //KNOB3 & CVIN2 as VCA/FM depth 
+    //knob
+    knob_depth = UFix&lt;0,10&gt;::fromRaw(mozziAnalogRead(KNOB3)); // Interpret 10bit read as value in [0, 1] 
+    //CV in
+    cv_depth = UFix&lt;0,10&gt;::fromRaw(mozziAnalogRead(CV_IN2));
+    depth = min((cv_depth + knob_depth).asFloat(), 0.99);
+    //setting freq, same in both modes
+    freq_knob = 32 + (mozziAnalogRead(KNOB1)&gt;&gt;1); //Range 32 hz ~C1 - 544 hz ~C#5            # without rightshift 1055hz ~C6
+    //voct scaling
+    voct = mozziAnalogRead(VOCT_IN);
+    freq = UFix&lt;16,16&gt;(freq_knob * (pgm_read_float(&(voctpow[voct])))); // V/oct apply
+    setFreqs(freq);
+}
+
+AudioOutput updateAudio(){
+switch (mode){
+    case 1://Wavetable
+    return MonoOutput(SCALE_AUDIO(
+                (depth*(
+                    (gainA * UFix&lt;8,0&gt;::fromRaw(waveA.next()))
+                    +(gainB * UFix&lt;8,0&gt;::fromRaw(waveB.next()))
+                ) 
+                ).asRaw(),   17) // 16+1 bit headroom scaling
+        );
+        break;
+    case 2://FM
+    auto modulation = (deviation * toSFraction(aModulator.next())); //modulation scaling
+    return MonoOutput::from8Bit(aCarrier.phMod(modulation));        //FM is really phase-mod
+    break;
+    default: //should never occur
+    return 0;
+    }
+}
+
+void loop() {
+    audioHook();
+}
+                </code></pre>
+            </div>
         </main>
+        <div id="modal">
+                <!-- container for display of enlarged images -->
+                <div id="modal-content">
+                    <button onclick="closeModal()" id="close-modal">
+                        <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 72 72" width="128px" height="128px"><path d="M 19 15 C 17.977 15 16.951875 15.390875 16.171875 16.171875 C 14.609875 17.733875 14.609875 20.266125 16.171875 21.828125 L 30.34375 36 L 16.171875 50.171875 C 14.609875 51.733875 14.609875 54.266125 16.171875 55.828125 C 16.951875 56.608125 17.977 57 19 57 C 20.023 57 21.048125 56.609125 21.828125 55.828125 L 36 41.65625 L 50.171875 55.828125 C 51.731875 57.390125 54.267125 57.390125 55.828125 55.828125 C 57.391125 54.265125 57.391125 51.734875 55.828125 50.171875 L 41.65625 36 L 55.828125 21.828125 C 57.390125 20.266125 57.390125 17.733875 55.828125 16.171875 C 54.268125 14.610875 51.731875 14.609875 50.171875 16.171875 L 36 30.34375 L 21.828125 16.171875 C 21.048125 15.391875 20.023 15 19 15 z"/>
+                        </svg>
+                    </button>
+                
+                    <!-- modal content will be injected here -->
+                </div>
+        </div>
         <!-- this gets injected with lang.html -->
         <div id="lang-container"></div>
     </body>
